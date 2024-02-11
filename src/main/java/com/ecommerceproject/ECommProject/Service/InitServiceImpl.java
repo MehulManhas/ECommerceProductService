@@ -1,13 +1,7 @@
 package com.ecommerceproject.ECommProject.Service;
 
-import com.ecommerceproject.ECommProject.Model.Category;
-import com.ecommerceproject.ECommProject.Model.Price;
-import com.ecommerceproject.ECommProject.Model.Product;
-import com.ecommerceproject.ECommProject.Model.ProductOrder;
-import com.ecommerceproject.ECommProject.Repository.CategoryRepository;
-import com.ecommerceproject.ECommProject.Repository.OrderRepository;
-import com.ecommerceproject.ECommProject.Repository.PriceRepository;
-import com.ecommerceproject.ECommProject.Repository.ProductRepository;
+import com.ecommerceproject.ECommProject.Model.*;
+import com.ecommerceproject.ECommProject.Repository.*;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
@@ -18,14 +12,17 @@ public class InitServiceImpl implements InitService{
     private PriceRepository priceRepository;
     private OrderRepository orderRepository;
     private CategoryRepository categoryRepository;
+    private final AuthorRepository authorRepository;
 
 
-    public InitServiceImpl(ProductRepository productRepository, PriceRepository priceRepository, OrderRepository orderRepository, CategoryRepository categoryRepository) {
+    public InitServiceImpl(ProductRepository productRepository, PriceRepository priceRepository, OrderRepository orderRepository, CategoryRepository categoryRepository,
+                           AuthorRepository authorRepository) {
         this.productRepository = productRepository;
         this.priceRepository = priceRepository;
         this.orderRepository = orderRepository;
         this.categoryRepository = categoryRepository;
 
+        this.authorRepository = authorRepository;
     }
 
     @Override
@@ -96,6 +93,19 @@ public class InitServiceImpl implements InitService{
         ProductOrder order = new ProductOrder();
         order.setProduct(List.of(iphone, macbook, watch));
         order = orderRepository.save(order);
+
+        Author author = new Author("Ashok Kumar", null);
+
+        Book book1 = new Book("Book1", author);
+        Book book2 = new Book("Book2", author);
+        Book book3 = new Book("Book3", author);
+        author.setBooks(List.of(book1, book2, book3));
+
+        authorRepository.save(author);
+
+        Author savedAuthor = authorRepository.findById(1).get();
+        List<Book> books = savedAuthor.getBooks();
+        System.out.println(books);
 
     }
 }
